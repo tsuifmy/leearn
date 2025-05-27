@@ -8,6 +8,10 @@ import Publish from './pages/content/Publish';
 import Detail from './pages/content/Detail';
 import Chat from './pages/ai/Chat';
 import Profile from './pages/profile/Profile';
+import Courses from './pages/courses/Courses';
+import Learning from './pages/learning/Learning';
+import Search from './pages/search/Search';
+import NotFound from './pages/NotFound';
 import Test from './pages/Test';
 
 const AppContent: React.FC = () => {
@@ -16,9 +20,6 @@ const AppContent: React.FC = () => {
   // 需要独立布局的页面（如登录、注册）
   const fullScreenPages = ['/login', '/register', '/ai-chat'];
   const isFullScreenPage = fullScreenPages.includes(location.pathname);
-  
-  // 首页需要特殊的背景和标题
-  const isHomePage = location.pathname === '/';
 
   if (isFullScreenPage) {
     return (
@@ -31,23 +32,20 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <div className={`min-h-screen ${isHomePage ? 'bg-gradient-to-br from-blue-400 to-purple-500' : 'bg-gray-50'}`}>
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      {isHomePage && (
-        <div className="flex flex-col items-center justify-center pt-20">
-          <h1 className="text-5xl font-extrabold text-white mb-4 drop-shadow-lg">学乐无穷</h1>
-          <p className="text-xl text-white/90 mb-8">因材施教，乐在其中。结识朋友，分享知识，AI助力成长！</p>
-        </div>
-      )}
-      
-      <div className={isHomePage ? 'flex flex-col items-center justify-center' : 'pt-16'}>
+      <div className="pt-16">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/learning" element={<Learning />} />
           <Route path="/publish" element={<Publish />} />
           <Route path="/content/:id" element={<Detail />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/test" element={<Test />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
