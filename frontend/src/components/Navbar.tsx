@@ -26,15 +26,15 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-md">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-xl rounded-b-2xl border-b border-blue-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+          <Link to="/" className="flex items-center space-x-2 group">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
               <span className="text-white font-bold text-sm">学</span>
             </div>
-            <span className="text-xl font-bold text-gray-800">学乐无穷</span>
+            <span className="text-xl font-bold text-gray-800 tracking-wide group-hover:text-blue-600 transition-colors">学乐无穷</span>
           </Link>
 
           {/* 导航菜单 */}
@@ -43,9 +43,9 @@ const Navbar: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 ${
                   location.pathname === item.path
-                    ? 'bg-blue-100 text-blue-700'
+                    ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow'
                     : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100'
                 }`}
               >
@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
           {/* 搜索框 */}
           <div className="hidden md:flex items-center">
             <form onSubmit={handleSearch} className="relative">
-              <div className={`flex items-center bg-gray-100 rounded-lg transition-all duration-200 ${
+              <div className={`flex items-center bg-gray-100 rounded-lg transition-all duration-200 shadow-inner ${
                 isSearchFocused ? 'ring-2 ring-blue-500 bg-white' : ''
               }`}>
                 <svg className="w-4 h-4 text-gray-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +86,7 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               to="/register"
-              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-md"
             >
               注册
             </Link>
@@ -113,7 +113,7 @@ const Navbar: React.FC = () => {
 
         {/* 移动端菜单 */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200">
+          <div className="md:hidden bg-white border-t border-blue-100 rounded-b-2xl shadow-xl animate-fade-in-down">
             <div className="px-4 py-3 space-y-2">
               {/* 移动端搜索 */}
               <form onSubmit={handleSearch} className="mb-4">
@@ -137,9 +137,9 @@ const Navbar: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                  className={`block px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 ${
                     location.pathname === item.path
-                      ? 'bg-blue-100 text-blue-700'
+                      ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow'
                       : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100'
                   }`}
                 >
@@ -148,7 +148,7 @@ const Navbar: React.FC = () => {
               ))}
 
               {/* 移动端登录注册按钮 */}
-              <div className="pt-4 border-t border-gray-200 space-y-2">
+              <div className="pt-4 border-t border-blue-100 space-y-2">
                 <Link
                   to="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -159,7 +159,7 @@ const Navbar: React.FC = () => {
                 <Link
                   to="/register"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-center bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200"
+                  className="block text-center bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-md"
                 >
                   注册
                 </Link>
