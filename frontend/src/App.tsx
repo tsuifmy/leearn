@@ -8,6 +8,7 @@ import Publish from './pages/content/Publish';
 import Detail from './pages/content/Detail';
 import Chat from './pages/ai/Chat';
 import Profile from './pages/profile/Profile';
+import Test from './pages/Test';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -46,6 +47,7 @@ const AppContent: React.FC = () => {
           <Route path="/publish" element={<Publish />} />
           <Route path="/content/:id" element={<Detail />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </div>
     </div>
