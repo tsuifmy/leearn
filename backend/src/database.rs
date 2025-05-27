@@ -97,7 +97,6 @@ impl Database {
             "DELETE FROM users WHERE id = $1"
         )
         .bind(id)
-        )
         .execute(&self.pool)
         .await?;
 
