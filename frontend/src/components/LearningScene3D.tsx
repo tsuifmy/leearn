@@ -33,8 +33,8 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       0.1,
       1000
     );
-    // 几乎正对显示器，微微右偏1°，上偏2°，更近距离
-    camera.position.set(0.2, 3.2, 3.8);
+    // 几乎正对显示器，微微右偏1°，上偏2°，更近距离，降低高度减少俯视角度
+    camera.position.set(0.2, 2.5, 3.8);
     camera.lookAt(0, 1, 0);
     cameraRef.current = camera;
 
@@ -955,7 +955,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
         
         // Set fixed camera distance and height
         const radius = 3.8;
-        const baseHeight = 3.2;
+        const baseHeight = 2.5;
         const baseAngle = 0.05; // 约3度的右偏角度
         
         // Add gentle rotation around vertical axis with hover effect
