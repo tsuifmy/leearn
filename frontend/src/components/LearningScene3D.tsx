@@ -54,8 +54,8 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
 
-    // Enhanced lighting setup
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+    // Enhanced lighting setup - 温暖基础照明
+    const ambientLight = new THREE.AmbientLight(0xffeaa7, 1.0); // 提高环境光强度，使用温暖色调
     scene.add(ambientLight);
 
     // Main directional light (warm desk lamp effect)
@@ -86,6 +86,31 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
     const keyboardLight = new THREE.PointLight(0xff0080, 1.2, 6);
     keyboardLight.position.set(0, 1, 2.2);
     scene.add(keyboardLight);
+
+    // 添加斜上方温暖光照 - 主要照明源
+    const cozyTopLight = new THREE.DirectionalLight(0xffeaa7, 1.8); // 温暖的奶黄色
+    cozyTopLight.position.set(-4, 8, 3); // 左上方斜照
+    cozyTopLight.castShadow = true;
+    cozyTopLight.shadow.mapSize.width = 2048;
+    cozyTopLight.shadow.mapSize.height = 2048;
+    cozyTopLight.shadow.camera.near = 0.1;
+    cozyTopLight.shadow.camera.far = 30;
+    cozyTopLight.shadow.camera.left = -8;
+    cozyTopLight.shadow.camera.right = 8;
+    cozyTopLight.shadow.camera.top = 8;
+    cozyTopLight.shadow.camera.bottom = -8;
+    scene.add(cozyTopLight);
+
+    // 右上方补光 - 平衡阴影
+    const fillLight = new THREE.DirectionalLight(0xffd3a5, 1.2); // 温暖的桃色补光
+    fillLight.position.set(5, 6, 2); // 右上方
+    fillLight.castShadow = false; // 补光不产生阴影
+    scene.add(fillLight);
+
+    // 顶部柔和环境光 - 营造整体温馨氛围
+    const softTopLight = new THREE.HemisphereLight(0xffeaa7, 0xff9a8b, 0.6); // 上方暖色，下方偏红
+    softTopLight.position.set(0, 10, 0);
+    scene.add(softTopLight);
 
     // Create wooden desk
     const createDesk = () => {
