@@ -77,6 +77,14 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
     monitorLight.position.set(0, 2.5, 1);
     scene.add(monitorLight);
 
+    // 专门照亮代码屏幕的聚光灯 - 优化清晰度
+    const codeScreenLight = new THREE.SpotLight(0xffffff, 4.0, 8, Math.PI / 8, 0.05);
+    codeScreenLight.position.set(0, 2.5, 2.5); // 从前方照射屏幕
+    codeScreenLight.target.position.set(0, 1.8, 1.2); // 对准屏幕中心
+    codeScreenLight.castShadow = false; // 不产生阴影，只用于照亮
+    scene.add(codeScreenLight);
+    scene.add(codeScreenLight.target);
+
     // Warm desk light with flickering effect
     const deskLight = new THREE.PointLight(0xffaa44, 1.5, 10);
     deskLight.position.set(-2, 3.5, -1);
@@ -213,23 +221,23 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
     const createMonitor = () => {
       const group = new THREE.Group();
       
-      // Monitor base - 调整位置与支架对齐，完全在屏幕后面
+      // Monitor base - 调整位置与支架对齐，哑光金属材质
       const baseGeometry = new THREE.CylinderGeometry(0.5, 0.6, 0.15, 16);
       const baseMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x2a2a2a,
-        roughness: 0.3,
-        metalness: 0.8
+        color: 0x2d5a73, // 中等饱和度的青蓝色
+        roughness: 0.45, // 哑光效果
+        metalness: 0.85
       });
       const base = new THREE.Mesh(baseGeometry, baseMaterial);
       base.position.set(0, 0.225, -0.15); // Z位置与支架对齐，更向后
       base.castShadow = true;
       group.add(base);
 
-      // Monitor stand - 调整高度和强度以支撑更大显示器
+      // Monitor stand - 调整高度和强度以支撑更大显示器，哑光金属材质
       const standGeometry = new THREE.CylinderGeometry(0.08, 0.08, 1.05, 12); // 稍微增高以支撑更大屏幕
       const standMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x333333,
-        roughness: 0.2,
+        color: 0x2d5a73, // 中等饱和度的青蓝色
+        roughness: 0.45, // 哑光效果
         metalness: 0.9
       });
       const stand = new THREE.Mesh(standGeometry, standMaterial);
@@ -237,11 +245,11 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       stand.castShadow = true;
       group.add(stand);
 
-      // Monitor arm - 连接支架和屏幕的连接臂，增强以支撑更大屏幕
+      // Monitor arm - 连接支架和屏幕的连接臂，增强以支撑更大屏幕，哑光金属材质
       const armGeometry = new THREE.BoxGeometry(0.12, 0.04, 0.28); // 稍微增大以支撑更大屏幕
       const armMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x333333,
-        roughness: 0.2,
+        color: 0x2d5a73, // 中等饱和度的青蓝色
+        roughness: 0.45, // 哑光效果
         metalness: 0.9
       });
       const arm = new THREE.Mesh(armGeometry, armMaterial);
@@ -249,43 +257,44 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       arm.castShadow = true;
       group.add(arm);
 
-      // Monitor bezel (outer frame) - 更窄更薄，金属光泽，更大尺寸
+      // Monitor bezel (outer frame) - 饱和度高的哑光金属材质，更大尺寸
       const bezelGeometry = new THREE.BoxGeometry(3.25, 2.19, 0.06); // 增大约33%
       const bezelMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x23272a,
-        roughness: 0.18, // 更光滑
-        metalness: 0.7,  // 明显金属感
-        envMapIntensity: 1.2
+        color: 0x1a4d66, // 深青蓝色，更饱和
+        roughness: 0.4,  // 哑光效果
+        metalness: 0.9,  // 强金属感
+        envMapIntensity: 0.8 // 适中的环境反射
       });
       const bezel = new THREE.Mesh(bezelGeometry, bezelMaterial);
       bezel.position.set(0, 1.8, 0.01); // 稍微调高位置适应更大屏幕
       bezel.castShadow = true;
       group.add(bezel);
 
-      // Monitor screen (black when off) - 更薄，更大尺寸
+      // Monitor screen (black when off) - 更薄，更大尺寸，饱和反光材质
       const screenGeometry = new THREE.BoxGeometry(3.15, 2.08, 0.018); // 增大约33%
       const screenMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x000000,
-        emissive: 0x001122,
-        emissiveIntensity: 0.08,
-        roughness: 0.1,
-        metalness: 0.85
+        color: 0x0a1a2a, // 深蓝黑色，更有层次
+        emissive: 0x002255, // 更饱和的蓝色发光
+        emissiveIntensity: 0.15,
+        roughness: 0.05, // 更光滑，增加反光
+        metalness: 0.95  // 强金属感
       });
       const screen = new THREE.Mesh(screenGeometry, screenMaterial);
       screen.position.set(0, 1.8, 0.045); // 贴近bezel，调高位置
       screen.castShadow = true;
       group.add(screen);
 
-      // Screen content (code editor) - 更大尺寸
+      // Screen content (code editor) - 更大尺寸，锐利显示
       const codeGeometry = new THREE.PlaneGeometry(3.04, 1.97); // 增大约33%
       const codeTexture = createCodeTexture();
       const codeMaterial = new THREE.MeshStandardMaterial({ 
         map: codeTexture,
-        transparent: true,
-        emissive: 0x002244,
-        emissiveIntensity: 0.25,
-        roughness: 0.9,
-        metalness: 0.0
+        transparent: false,
+        emissive: 0x004466, // 增强背景发光
+        emissiveIntensity: 0.8, // 大幅提高发光强度
+        roughness: 0.0,
+        metalness: 0.0,
+        opacity: 1.0
       });
       const codeScreen = new THREE.Mesh(codeGeometry, codeMaterial);
       codeScreen.position.set(0, 1.8, 0.055); // 贴近屏幕表面，调高位置适应更大屏幕
@@ -294,9 +303,11 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       // Monitor brand logo - 调整位置适应更大屏幕
       const logoGeometry = new THREE.PlaneGeometry(0.3, 0.1);
       const logoMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0xffffff,
-        emissive: 0x111111,
-        emissiveIntensity: 0.2
+        color: 0x66ccff, // 明亮的青蓝色
+        emissive: 0x1166aa, // 饱和的蓝色发光
+        emissiveIntensity: 0.4, // 增强发光
+        roughness: 0.3,
+        metalness: 0.6
       });
       const logo = new THREE.Mesh(logoGeometry, logoMaterial);
       logo.position.set(0, 1.05, 0.11); // 稍微调高位置适应更大屏幕
@@ -306,45 +317,65 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       return group;
     };
 
-    // Create code texture
+    // Create code texture - 超大字体，高对比度
     const createCodeTexture = () => {
       const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 512;
+      canvas.width = 2048;
+      canvas.height = 2048;
       const ctx = canvas.getContext('2d')!;
       
-      // Dark background
-      ctx.fillStyle = '#0d1117';
-      ctx.fillRect(0, 0, 512, 512);
+      // 启用清晰渲染
+      ctx.imageSmoothingEnabled = true;
       
-      // Code lines
-      ctx.font = '12px monospace';
+      // 深蓝色背景，模拟真实显示器
+      const gradient = ctx.createLinearGradient(0, 0, 2048, 2048);
+      gradient.addColorStop(0, '#1a1a3a');
+      gradient.addColorStop(1, '#0a0a2a');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 2048, 2048);
+      
+      // 添加屏幕边框
+      ctx.strokeStyle = '#333366';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(50, 50, 1948, 1948);
+      
+      // 超大字体确保可见
+      ctx.font = 'bold 120px "Monaco", "Courier New", monospace';
+      ctx.textBaseline = 'top';
+      
       const lines = [
-        '// Learning System',
-        'function learn() {',
-        '  const skill = study();',
-        '  const knowledge = practice();',
-        '  return skill + knowledge;',
+        'learn() {',
+        '  code++',
         '}',
-        '',
-        'const user = {',
-        '  name: "学习者",',
-        '  progress: 75,',
-        '  goals: ["React", "TypeScript"]',
-        '};'
+        'SUCCESS!'
       ];
       
       lines.forEach((line, i) => {
-        let color = '#58a6ff'; // Default blue
-        if (line.includes('//')) color = '#7c3aed'; // Comments in purple
-        if (line.includes('function') || line.includes('const')) color = '#f97316'; // Keywords in orange
-        if (line.includes('"')) color = '#10b981'; // Strings in green
+        let color = '#00ffff'; // 默认亮青色，非常醒目
         
+        if (line.includes('SUCCESS')) {
+          color = '#00ff00'; // 亮绿色成功消息
+        } else if (line.includes('learn') || line.includes('code')) {
+          color = '#ffff00'; // 亮黄色关键字
+        } else if (line.includes('{') || line.includes('}')) {
+          color = '#ff6600'; // 亮橙色括号
+        }
+        
+        // 绘制文字阴影增强可见性
+        ctx.fillStyle = '#000000';
+        ctx.fillText(line, 152, 202 + i * 200);
+        
+        // 绘制主文字，超大超亮
         ctx.fillStyle = color;
-        ctx.fillText(line, 20, 40 + i * 20);
+        ctx.fillText(line, 150, 200 + i * 200);
       });
       
-      return new THREE.CanvasTexture(canvas);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.generateMipmaps = false;
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      
+      return texture;
     };
 
     // Create keyboard
