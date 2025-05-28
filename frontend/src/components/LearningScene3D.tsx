@@ -188,7 +188,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
     const createMonitor = () => {
       const group = new THREE.Group();
       
-      // Monitor base
+      // Monitor base - 调整位置与支架对齐
       const baseGeometry = new THREE.CylinderGeometry(0.5, 0.6, 0.15, 16);
       const baseMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x2a2a2a,
@@ -196,61 +196,74 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
         metalness: 0.8
       });
       const base = new THREE.Mesh(baseGeometry, baseMaterial);
-      base.position.set(0, 0.225, 0);
+      base.position.set(0, 0.225, -0.1); // Z位置与支架对齐
       base.castShadow = true;
       group.add(base);
 
-      // Monitor stand
-      const standGeometry = new THREE.CylinderGeometry(0.08, 0.08, 1.2, 12);
+      // Monitor stand - 调整高度避免伸进屏幕
+      const standGeometry = new THREE.CylinderGeometry(0.08, 0.08, 1.0, 12); // 高度从1.2降到1.0
       const standMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x333333,
         roughness: 0.2,
         metalness: 0.9
       });
       const stand = new THREE.Mesh(standGeometry, standMaterial);
-      stand.position.set(0, 0.9, 0);
+      stand.position.set(0, 0.8, -0.1); // Y位置从0.9降到0.8，Z位置向后偏移-0.1避免与屏幕重叠
       stand.castShadow = true;
       group.add(stand);
 
-      // Monitor bezel (outer frame)
-      const bezelGeometry = new THREE.BoxGeometry(2.6, 1.8, 0.2);
+      // Monitor arm - 连接支架和屏幕的连接臂
+      const armGeometry = new THREE.BoxGeometry(0.12, 0.04, 0.3); 
+      const armMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x333333,
+        roughness: 0.2,
+        metalness: 0.9
+      });
+      const arm = new THREE.Mesh(armGeometry, armMaterial);
+      arm.position.set(0, 1.68, -0.08); // 连接支架顶部和屏幕背面
+      arm.castShadow = true;
+      group.add(arm);
+
+      // Monitor bezel (outer frame) - 更窄更薄，金属光泽
+      const bezelGeometry = new THREE.BoxGeometry(2.44, 1.64, 0.06); // 边框宽度缩小，厚度更薄
       const bezelMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x1a1a1a,
-        roughness: 0.4,
-        metalness: 0.1
+        color: 0x23272a,
+        roughness: 0.18, // 更光滑
+        metalness: 0.7,  // 明显金属感
+        envMapIntensity: 1.2
       });
       const bezel = new THREE.Mesh(bezelGeometry, bezelMaterial);
-      bezel.position.set(0, 1.7, 0);
+      bezel.position.set(0, 1.7, 0.01); // 更贴近屏幕
       bezel.castShadow = true;
       group.add(bezel);
 
-      // Monitor screen (black when off)
-      const screenGeometry = new THREE.BoxGeometry(2.4, 1.6, 0.05);
+      // Monitor screen (black when off) - 更薄
+      const screenGeometry = new THREE.BoxGeometry(2.36, 1.56, 0.018); // 屏幕厚度更薄
       const screenMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x000000,
         emissive: 0x001122,
-        emissiveIntensity: 0.1,
+        emissiveIntensity: 0.08,
         roughness: 0.1,
-        metalness: 0.9
+        metalness: 0.85
       });
       const screen = new THREE.Mesh(screenGeometry, screenMaterial);
-      screen.position.set(0, 1.7, 0.08);
+      screen.position.set(0, 1.7, 0.045); // 贴近bezel
       screen.castShadow = true;
       group.add(screen);
 
       // Screen content (code editor)
-      const codeGeometry = new THREE.PlaneGeometry(2.2, 1.4);
+      const codeGeometry = new THREE.PlaneGeometry(2.28, 1.48);
       const codeTexture = createCodeTexture();
       const codeMaterial = new THREE.MeshStandardMaterial({ 
         map: codeTexture,
         transparent: true,
         emissive: 0x002244,
-        emissiveIntensity: 0.4,
+        emissiveIntensity: 0.25,
         roughness: 0.9,
         metalness: 0.0
       });
       const codeScreen = new THREE.Mesh(codeGeometry, codeMaterial);
-      codeScreen.position.set(0, 1.7, 0.13);
+      codeScreen.position.set(0, 1.7, 0.055); // 贴近屏幕表面
       group.add(codeScreen);
 
       // Monitor brand logo
