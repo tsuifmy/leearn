@@ -12,7 +12,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const animationIdRef = useRef<number | null>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
-  const targetRef = useRef({ x: 5, y: 4, z: 8 });
+  const targetRef = useRef({ x: 0.2, y: 3.2, z: 3.8 });
   const [isHovered, setIsHovered] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
   const [debugInfo, setDebugInfo] = useState({ fps: 60, triangles: 0 });
@@ -33,7 +33,8 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       0.1,
       1000
     );
-    camera.position.set(5, 4, 8);
+    // 几乎正对显示器，微微右偏1°，上偏2°，更近距离
+    camera.position.set(0.2, 3.2, 3.8);
     camera.lookAt(0, 1, 0);
     cameraRef.current = camera;
 
@@ -54,11 +55,11 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
     mountRef.current.appendChild(renderer.domElement);
 
     // Enhanced lighting setup
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
     scene.add(ambientLight);
 
     // Main directional light (warm desk lamp effect)
-    const directionalLight = new THREE.DirectionalLight(0xffa500, 1.5);
+    const directionalLight = new THREE.DirectionalLight(0xffa500, 2.5);
     directionalLight.position.set(3, 6, 4);
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 4096;
@@ -72,17 +73,17 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
     scene.add(directionalLight);
 
     // Blue monitor glow with animation
-    const monitorLight = new THREE.PointLight(0x4a90e2, 1.2, 12);
+    const monitorLight = new THREE.PointLight(0x4a90e2, 2.0, 12);
     monitorLight.position.set(0, 2.5, 1);
     scene.add(monitorLight);
 
     // Warm desk light with flickering effect
-    const deskLight = new THREE.PointLight(0xffaa44, 0.8, 10);
+    const deskLight = new THREE.PointLight(0xffaa44, 1.5, 10);
     deskLight.position.set(-2, 3.5, -1);
     scene.add(deskLight);
 
     // RGB keyboard light
-    const keyboardLight = new THREE.PointLight(0xff0080, 0.6, 6);
+    const keyboardLight = new THREE.PointLight(0xff0080, 1.2, 6);
     keyboardLight.position.set(0, 1, -1);
     scene.add(keyboardLight);
 
@@ -829,9 +830,58 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
 
     // Add back wall
     const wallGeometry = new THREE.PlaneGeometry(25, 15);
+    
+    // 创建更亮的墙面纹理，添加沙漏图案
+    const createBrightWallTexture = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 1024;
+      const ctx = canvas.getContext('2d')!;
+      
+      // 明亮的渐变底色
+      const grad = ctx.createLinearGradient(0, 0, 0, 1024);
+      grad.addColorStop(0, '#5a5a9a');  // 更亮的蓝紫色
+      grad.addColorStop(0.5, '#4a4a8a');
+      grad.addColorStop(1, '#3a3a7a');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1024, 1024);
+      
+      // 添加沙漏图案
+      const drawHourglass = (x: number, y: number, size: number) => {
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';  // 金色沙漏
+        ctx.font = `${size}px Arial`;
+        ctx.fillText('⌛', x, y);
+      };
+      
+      // 在墙面上绘制多个沙漏
+      for (let i = 0; i < 15; i++) {
+        const x = (i % 5) * 200 + 100;
+        const y = Math.floor(i / 5) * 250 + 150;
+        drawHourglass(x, y, 80 + Math.random() * 40);
+      }
+      
+      // 添加装饰线条
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 10; i++) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * 1024, 0);
+        ctx.lineTo(Math.random() * 1024, 1024);
+        ctx.stroke();
+      }
+      
+      return new THREE.CanvasTexture(canvas);
+    };
+    
+    const wallTexture = createBrightWallTexture();
+    wallTexture.wrapS = THREE.RepeatWrapping;
+    wallTexture.wrapT = THREE.RepeatWrapping;
+    wallTexture.repeat.set(2, 1);
+    
     const wallMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x2c2c54,
-      roughness: 0.9,
+      map: wallTexture,
+      color: 0xffffff,  // 白色混合让墙面更亮
+      roughness: 0.8,
       metalness: 0.0
     });
     const wall = new THREE.Mesh(wallGeometry, wallMaterial);
@@ -899,15 +949,29 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
         performanceCheckInterval = 0;
       }
 
-      // Smooth camera movement based on mouse
+      // Smooth camera rotation around vertical axis instead of position changes
       if (cameraRef.current) {
         const camera = cameraRef.current;
-        camera.position.x += (targetRef.current.x - camera.position.x) * 0.02;
-        camera.position.y += (targetRef.current.y - camera.position.y) * 0.02;
-        camera.position.z += (targetRef.current.z - camera.position.z) * 0.02;
         
-        // Add subtle floating motion
-        camera.position.y += Math.sin(elapsedTime * 0.5) * 0.02;
+        // Set fixed camera distance and height
+        const radius = 3.8;
+        const baseHeight = 3.2;
+        const baseAngle = 0.05; // 约3度的右偏角度
+        
+        // Add gentle rotation around vertical axis with hover effect
+        let rotationSpeed = 0.2; // 慢速旋转
+        if (isHovered) {
+          rotationSpeed *= 1.5; // Slightly faster rotation when hovered
+        }
+        
+        const angle = baseAngle + Math.sin(elapsedTime * rotationSpeed) * 0.17; // ±10度摆动
+        
+        // Calculate camera position in circular motion
+        camera.position.x = Math.sin(angle) * radius;
+        camera.position.z = Math.cos(angle) * radius;
+        camera.position.y = baseHeight + Math.sin(elapsedTime * 0.3) * 0.05; // 轻微上下浮动
+        
+        // Always look at the monitor/desk center
         camera.lookAt(0, 1, 0);
       }
       
@@ -920,13 +984,6 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       
       // Animate desk light flickering
       deskLight.intensity = 0.8 + Math.sin(elapsedTime * 5) * 0.1;
-      
-      // Add hover effect
-      if (isHovered) {
-        camera.position.z = Math.max(6, camera.position.z - deltaTime * 2);
-      } else {
-        camera.position.z = Math.min(8, camera.position.z + deltaTime * 1);
-      }
       
       renderer.render(scene, camera);
     };
@@ -948,7 +1005,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
 
     window.addEventListener('resize', handleResize);
 
-    // Mouse movement handler
+    // Mouse movement handler (removed dynamic position changes)
     const handleMouseMove = (event: MouseEvent) => {
       if (!mountRef.current) return;
       
@@ -958,9 +1015,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       
       mouseRef.current = { x, y };
       
-      // Update target position based on mouse movement
-      targetRef.current.x = 5 + (y * 2);
-      targetRef.current.y = 4 + (x * 2);
+      // No longer update target position - keep camera stable
     };
 
     const handleMouseEnter = () => setIsHovered(true);
