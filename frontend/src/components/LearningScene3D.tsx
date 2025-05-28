@@ -415,61 +415,152 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       return group;
     };
 
-    // Create mouse
+    // Create enhanced mouse with modern design
     const createMouse = () => {
+      const group = new THREE.Group();
+      
+      // Modern mouse body with curves
       const mouseGeometry = new THREE.BoxGeometry(0.3, 0.05, 0.5);
-      mouseGeometry.scale(1, 1, 1);
-      const mouseMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+      // Add curves to the mouse
+      mouseGeometry.scale(1, 1.2, 1);
+      const mouseMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x2a2a2a,
+        roughness: 0.3,
+        metalness: 0.1,
+        emissive: 0x111111,
+        emissiveIntensity: 0.05
+      });
       const mouse = new THREE.Mesh(mouseGeometry, mouseMaterial);
       mouse.position.set(1.5, 0.125, 2.8);
       mouse.castShadow = true;
+      group.add(mouse);
       
-      // Mouse wheel
-      const wheelGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.1, 8);
-      const wheelMaterial = new THREE.MeshLambertMaterial({ color: 0x555555 });
+      // Mouse wheel with metallic finish
+      const wheelGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.1, 12);
+      const wheelMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x666666,
+        roughness: 0.2,
+        metalness: 0.8
+      });
       const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
       wheel.rotation.x = Math.PI / 2;
       wheel.position.set(1.5, 0.16, 2.9);
       wheel.castShadow = true;
-      
-      const group = new THREE.Group();
-      group.add(mouse);
       group.add(wheel);
+
+      // Mouse buttons (left and right click)
+      const leftButtonGeometry = new THREE.BoxGeometry(0.12, 0.02, 0.2);
+      const rightButtonGeometry = new THREE.BoxGeometry(0.12, 0.02, 0.2);
+      const buttonMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x3a3a3a,
+        roughness: 0.4,
+        metalness: 0.05
+      });
+      
+      const leftButton = new THREE.Mesh(leftButtonGeometry, buttonMaterial);
+      leftButton.position.set(1.44, 0.158, 2.9);
+      group.add(leftButton);
+      
+      const rightButton = new THREE.Mesh(rightButtonGeometry, buttonMaterial);
+      rightButton.position.set(1.56, 0.158, 2.9);
+      group.add(rightButton);
+
+      // RGB LED strip at the bottom
+      const ledGeometry = new THREE.BoxGeometry(0.25, 0.01, 0.4);
+      const ledMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xff0066,
+        emissive: 0xff0066,
+        emissiveIntensity: 0.3,
+        transparent: true,
+        opacity: 0.8
+      });
+      const rgbLed = new THREE.Mesh(ledGeometry, ledMaterial);
+      rgbLed.position.set(1.5, 0.105, 2.8);
+      group.add(rgbLed);
+      
       return group;
     };
 
-    // Create speakers
+    // Create speakers with modern design and premium materials
     const createSpeakers = () => {
       const group = new THREE.Group();
       
       for (let i = 0; i < 2; i++) {
         const speakerGroup = new THREE.Group();
         
-        // Speaker body
+        // Speaker body with premium matte finish
         const speakerGeometry = new THREE.BoxGeometry(0.4, 0.8, 0.3);
-        const speakerMaterial = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
+        const speakerMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x1a1a1a,
+          roughness: 0.8,
+          metalness: 0.1,
+          emissive: 0x0a0a0a,
+          emissiveIntensity: 0.05
+        });
         const speaker = new THREE.Mesh(speakerGeometry, speakerMaterial);
         speaker.castShadow = true;
         speakerGroup.add(speaker);
 
-        // Speaker cone
-        const coneGeometry = new THREE.CylinderGeometry(0.15, 0.15, 0.02, 16);
-        const coneMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+        // Main speaker cone with realistic details
+        const coneGeometry = new THREE.CylinderGeometry(0.15, 0.12, 0.03, 24);
+        const coneMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x333333,
+          roughness: 0.6,
+          metalness: 0.2
+        });
         const cone = new THREE.Mesh(coneGeometry, coneMaterial);
         cone.rotation.x = Math.PI / 2;
         cone.position.set(0, 0.1, 0.16);
         speakerGroup.add(cone);
 
-        // LED indicator
-        const ledGeometry = new THREE.SphereGeometry(0.02);
-        const ledMaterial = new THREE.MeshLambertMaterial({ 
-          color: 0x00ff00,
-          emissive: 0x004400,
-          emissiveIntensity: 0.5
+        // Tweeter (small speaker)
+        const tweeterGeometry = new THREE.CylinderGeometry(0.05, 0.04, 0.02, 16);
+        const tweeterMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x444444,
+          roughness: 0.4,
+          metalness: 0.3
+        });
+        const tweeter = new THREE.Mesh(tweeterGeometry, tweeterMaterial);
+        tweeter.rotation.x = Math.PI / 2;
+        tweeter.position.set(0, -0.2, 0.16);
+        speakerGroup.add(tweeter);
+
+        // Speaker grille
+        for (let j = 0; j < 8; j++) {
+          const grillGeometry = new THREE.BoxGeometry(0.25, 0.01, 0.01);
+          const grillMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x666666,
+            roughness: 0.3,
+            metalness: 0.7
+          });
+          const grill = new THREE.Mesh(grillGeometry, grillMaterial);
+          grill.position.set(0, 0.2 - j * 0.05, 0.16);
+          speakerGroup.add(grill);
+        }
+
+        // LED indicator with pulsing effect
+        const ledGeometry = new THREE.SphereGeometry(0.015);
+        const ledMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x00ff88,
+          emissive: 0x004422,
+          emissiveIntensity: 0.8,
+          transparent: true,
+          opacity: 0.9
         });
         const led = new THREE.Mesh(ledGeometry, ledMaterial);
-        led.position.set(0.1, 0.3, 0.16);
+        led.position.set(0.12, 0.35, 0.16);
         speakerGroup.add(led);
+
+        // Speaker base with rubber feet
+        const baseGeometry = new THREE.CylinderGeometry(0.18, 0.2, 0.02, 16);
+        const baseMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x2a2a2a,
+          roughness: 0.9,
+          metalness: 0.05
+        });
+        const base = new THREE.Mesh(baseGeometry, baseMaterial);
+        base.position.set(0, -0.41, 0);
+        speakerGroup.add(base);
 
         speakerGroup.position.set(i === 0 ? -2.5 : 2.5, 0.5, 0.5);
         group.add(speakerGroup);
@@ -478,150 +569,410 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       return group;
     };
 
-    // Create coffee cup
+    // Create premium coffee cup with realistic details
     const createCoffeeCup = () => {
       const group = new THREE.Group();
       
-      // Cup
-      const cupGeometry = new THREE.CylinderGeometry(0.12, 0.1, 0.25, 16);
-      const cupMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+      // Premium ceramic cup with subtle texture
+      const cupGeometry = new THREE.CylinderGeometry(0.12, 0.1, 0.25, 24);
+      const cupMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xffffff,
+        roughness: 0.2,
+        metalness: 0.05,
+        emissive: 0x111111,
+        emissiveIntensity: 0.02
+      });
       const cup = new THREE.Mesh(cupGeometry, cupMaterial);
       cup.castShadow = true;
       group.add(cup);
 
-      // Coffee
-      const coffeeGeometry = new THREE.CylinderGeometry(0.11, 0.09, 0.02, 16);
-      const coffeeMaterial = new THREE.MeshLambertMaterial({ color: 0x4a2c17 });
+      // Rich coffee with foam
+      const coffeeGeometry = new THREE.CylinderGeometry(0.11, 0.09, 0.02, 24);
+      const coffeeMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x4a2c17,
+        roughness: 0.8,
+        metalness: 0.0,
+        emissive: 0x2a1509,
+        emissiveIntensity: 0.1
+      });
       const coffee = new THREE.Mesh(coffeeGeometry, coffeeMaterial);
       coffee.position.y = 0.12;
       group.add(coffee);
 
-      // Handle
-      const handleGeometry = new THREE.TorusGeometry(0.08, 0.02, 8, 16, Math.PI);
-      const handleMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+      // Coffee foam layer
+      const foamGeometry = new THREE.CylinderGeometry(0.105, 0.095, 0.005, 24);
+      const foamMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xf5e6d3,
+        roughness: 0.9,
+        metalness: 0.0,
+        transparent: true,
+        opacity: 0.8
+      });
+      const foam = new THREE.Mesh(foamGeometry, foamMaterial);
+      foam.position.y = 0.125;
+      group.add(foam);
+
+      // Elegant handle with modern design
+      const handleGeometry = new THREE.TorusGeometry(0.08, 0.015, 8, 20, Math.PI);
+      const handleMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xffffff,
+        roughness: 0.2,
+        metalness: 0.05
+      });
       const handle = new THREE.Mesh(handleGeometry, handleMaterial);
       handle.rotation.z = Math.PI / 2;
       handle.position.set(0.15, 0, 0);
       group.add(handle);
 
+      // Coffee steam particles
+      const steamGroup = new THREE.Group();
+      for (let i = 0; i < 5; i++) {
+        const steamGeometry = new THREE.SphereGeometry(0.005, 8, 6);
+        const steamMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.3 - i * 0.05,
+          emissive: 0x222222,
+          emissiveIntensity: 0.1
+        });
+        const steam = new THREE.Mesh(steamGeometry, steamMaterial);
+        steam.position.set(
+          (Math.random() - 0.5) * 0.1, 
+          0.15 + i * 0.03, 
+          (Math.random() - 0.5) * 0.1
+        );
+        steamGroup.add(steam);
+      }
+      group.add(steamGroup);
+
       group.position.set(-1.5, 0.225, 2.5);
       return group;
     };
 
-    // Create notebook
+    // Create premium notebook with realistic details
     const createNotebook = () => {
       const group = new THREE.Group();
       
-      // Notebook pages
+      // High-quality notebook pages with subtle texture
       const pagesGeometry = new THREE.BoxGeometry(0.6, 0.02, 0.8);
-      const pagesMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+      const pagesMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xffffff,
+        roughness: 0.8,
+        metalness: 0.0,
+        emissive: 0x0f0f0f,
+        emissiveIntensity: 0.02
+      });
       const pages = new THREE.Mesh(pagesGeometry, pagesMaterial);
       pages.castShadow = true;
       group.add(pages);
 
-      // Cover
+      // Premium cover with embossed logo
       const coverGeometry = new THREE.BoxGeometry(0.62, 0.01, 0.82);
-      const coverMaterial = new THREE.MeshLambertMaterial({ color: 0x2563eb });
+      const coverMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x2563eb,
+        roughness: 0.3,
+        metalness: 0.1,
+        emissive: 0x102040,
+        emissiveIntensity: 0.05
+      });
       const cover = new THREE.Mesh(coverGeometry, coverMaterial);
       cover.position.y = 0.015;
       cover.castShadow = true;
       group.add(cover);
+
+      // Spiral binding with metallic finish
+      for (let i = 0; i < 15; i++) {
+        const ringGeometry = new THREE.TorusGeometry(0.015, 0.005, 6, 12);
+        const ringMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x888888,
+          roughness: 0.2,
+          metalness: 0.8
+        });
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.position.set(-0.25, 0.02, -0.35 + (i * 0.05));
+        ring.rotation.y = Math.PI / 2;
+        group.add(ring);
+      }
+
+      // Bookmark ribbon
+      const bookmarkGeometry = new THREE.BoxGeometry(0.02, 0.005, 0.4);
+      const bookmarkMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xff6b35,
+        roughness: 0.6,
+        metalness: 0.0
+      });
+      const bookmark = new THREE.Mesh(bookmarkGeometry, bookmarkMaterial);
+      bookmark.position.set(0.2, 0.025, 0);
+      group.add(bookmark);
 
       group.position.set(-1.8, 0.125, 0.5);
       group.rotation.y = Math.PI / 6;
       return group;
     };
 
-    // Create pen
+    // Create premium pen with realistic details
     const createPen = () => {
-      const penGeometry = new THREE.CylinderGeometry(0.01, 0.01, 0.6, 8);
-      const penMaterial = new THREE.MeshLambertMaterial({ color: 0x2563eb });
-      const pen = new THREE.Mesh(penGeometry, penMaterial);
-      pen.position.set(-1.6, 0.15, 0.3);
-      pen.rotation.z = Math.PI / 3;
-      pen.castShadow = true;
-      return pen;
+      const group = new THREE.Group();
+      
+      // Pen body with premium metallic finish
+      const bodyGeometry = new THREE.CylinderGeometry(0.012, 0.008, 0.5, 16);
+      const bodyMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x1e3a8a,
+        roughness: 0.2,
+        metalness: 0.8,
+        emissive: 0x051560,
+        emissiveIntensity: 0.05
+      });
+      const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+      body.position.y = 0.25;
+      body.castShadow = true;
+      group.add(body);
+
+      // Pen tip with black ink
+      const tipGeometry = new THREE.CylinderGeometry(0.002, 0.004, 0.05, 8);
+      const tipMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x000000,
+        roughness: 0.9,
+        metalness: 0.1
+      });
+      const tip = new THREE.Mesh(tipGeometry, tipMaterial);
+      tip.position.y = 0.025;
+      group.add(tip);
+
+      // Pen cap with premium finish
+      const capGeometry = new THREE.CylinderGeometry(0.014, 0.012, 0.1, 16);
+      const capMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x1e40af,
+        roughness: 0.15,
+        metalness: 0.9
+      });
+      const cap = new THREE.Mesh(capGeometry, capMaterial);
+      cap.position.y = 0.525;
+      group.add(cap);
+
+      // Pen clip with metallic shine
+      const clipGeometry = new THREE.BoxGeometry(0.005, 0.08, 0.02);
+      const clipMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xc0c0c0,
+        roughness: 0.1,
+        metalness: 0.95
+      });
+      const clip = new THREE.Mesh(clipGeometry, clipMaterial);
+      clip.position.set(0.012, 0.52, 0);
+      group.add(clip);
+
+      // Brand logo engraving
+      const logoGeometry = new THREE.BoxGeometry(0.025, 0.003, 0.05);
+      const logoMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xffd700,
+        roughness: 0.3,
+        metalness: 0.7,
+        emissive: 0x332200,
+        emissiveIntensity: 0.1
+      });
+      const logo = new THREE.Mesh(logoGeometry, logoMaterial);
+      logo.position.y = 0.35;
+      group.add(logo);
+
+      group.position.set(-1.6, 0.15, 0.3);
+      group.rotation.z = Math.PI / 3;
+      group.castShadow = true;
+      return group;
     };
 
-    // Create enhanced plant with realistic leaves
+    // Create premium plant with realistic leaves and textures
     const createPlant = () => {
       const group = new THREE.Group();
       
-      // Pot
-      const potGeometry = new THREE.CylinderGeometry(0.25, 0.2, 0.3, 12);
-      const potMaterial = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+      // Elegant ceramic pot with texture
+      const potGeometry = new THREE.CylinderGeometry(0.25, 0.2, 0.3, 16);
+      const potMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xf5f5dc,
+        roughness: 0.3,
+        metalness: 0.0,
+        emissive: 0x0a0a08,
+        emissiveIntensity: 0.02
+      });
       const pot = new THREE.Mesh(potGeometry, potMaterial);
       pot.position.y = 0.15;
       pot.castShadow = true;
       group.add(pot);
 
-      // Soil
-      const soilGeometry = new THREE.CylinderGeometry(0.23, 0.23, 0.02, 12);
-      const soilMaterial = new THREE.MeshLambertMaterial({ color: 0x4a3c1a });
+      // Rich soil texture
+      const soilGeometry = new THREE.CylinderGeometry(0.23, 0.23, 0.02, 16);
+      const soilMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x2d1b0e,
+        roughness: 0.9,
+        metalness: 0.0
+      });
       const soil = new THREE.Mesh(soilGeometry, soilMaterial);
       soil.position.y = 0.29;
       group.add(soil);
 
-      // Plant stem
-      const stemGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.8, 6);
-      const stemMaterial = new THREE.MeshLambertMaterial({ color: 0x228b22 });
-      const stem = new THREE.Mesh(stemGeometry, stemMaterial);
-      stem.position.y = 0.7;
-      group.add(stem);
+      // Multiple stems for fuller look
+      for (let s = 0; s < 3; s++) {
+        const stemGeometry = new THREE.CylinderGeometry(0.018, 0.025, 0.8, 8);
+        const stemMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x2d5016,
+          roughness: 0.7,
+          metalness: 0.0
+        });
+        const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+        const stemAngle = (s / 3) * Math.PI * 2;
+        stem.position.set(
+          Math.cos(stemAngle) * 0.05,
+          0.7,
+          Math.sin(stemAngle) * 0.05
+        );
+        stem.rotation.z = (Math.random() - 0.5) * 0.2;
+        group.add(stem);
+      }
 
-      // Create realistic leaves
-      for (let i = 0; i < 8; i++) {
-        const leafGeometry = new THREE.PlaneGeometry(0.2, 0.4);
+      // Realistic leaves with varied shapes and positions
+      for (let i = 0; i < 12; i++) {
+        const leafGeometry = new THREE.PlaneGeometry(0.25, 0.4);
         leafGeometry.translate(0, 0.2, 0);
-        const leafMaterial = new THREE.MeshLambertMaterial({ 
-          color: 0x228b22,
-          side: THREE.DoubleSide 
+        
+        // Curve the leaf for realism
+        const positions = leafGeometry.attributes.position;
+        for (let j = 0; j < positions.count; j++) {
+          const y = positions.getY(j);
+          const x = positions.getX(j);
+          positions.setX(j, x + Math.sin(y * 2) * 0.02);
+        }
+        
+        const leafMaterial = new THREE.MeshStandardMaterial({ 
+          color: i % 2 === 0 ? 0x228b22 : 0x32cd32,
+          side: THREE.DoubleSide,
+          roughness: 0.8,
+          metalness: 0.0,
+          transparent: true,
+          opacity: 0.9
         });
         const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
         
-        const angle = (i / 8) * Math.PI * 2;
-        const height = 0.8 + (i % 3) * 0.1;
+        const angle = (i / 12) * Math.PI * 2;
+        const radius = 0.12 + Math.random() * 0.08;
+        const height = 0.75 + (i % 4) * 0.15 + Math.random() * 0.1;
         leaf.position.set(
-          Math.cos(angle) * 0.15,
+          Math.cos(angle) * radius,
           height,
-          Math.sin(angle) * 0.15
+          Math.sin(angle) * radius
         );
-        leaf.rotation.y = angle;
-        leaf.rotation.z = Math.PI / 6;
+        leaf.rotation.y = angle + Math.random() * 0.5;
+        leaf.rotation.z = (Math.random() - 0.5) * 0.4;
+        leaf.rotation.x = (Math.random() - 0.5) * 0.3;
         leaf.castShadow = true;
+        leaf.receiveShadow = true;
         group.add(leaf);
+      }
+
+      // Small decorative stones around the soil
+      for (let k = 0; k < 6; k++) {
+        const stoneGeometry = new THREE.SphereGeometry(0.015, 8, 6);
+        const stoneMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x696969,
+          roughness: 0.9,
+          metalness: 0.0
+        });
+        const stone = new THREE.Mesh(stoneGeometry, stoneMaterial);
+        const stoneAngle = (k / 6) * Math.PI * 2;
+        stone.position.set(
+          Math.cos(stoneAngle) * 0.18,
+          0.305,
+          Math.sin(stoneAngle) * 0.18
+        );
+        group.add(stone);
       }
 
       group.position.set(-2.2, 0.1, 1.5);
       return group;
     };
 
-    // Create stack of books with realistic details
+    // Create premium book stack with realistic details
     const createBookStack = () => {
       const group = new THREE.Group();
       
       const books = [
-        { color: 0x8b0000, height: 0.05, title: 'React' },
-        { color: 0x006400, height: 0.06, title: 'TypeScript' },
-        { color: 0x4169e1, height: 0.04, title: 'Three.js' },
-        { color: 0xff8c00, height: 0.05, title: 'Web Design' }
+        { color: 0x8b0000, height: 0.05, title: 'React Advanced Patterns', spine: 0xdc143c },
+        { color: 0x006400, height: 0.06, title: 'TypeScript Handbook', spine: 0x32cd32 },
+        { color: 0x4169e1, height: 0.04, title: 'Three.js Fundamentals', spine: 0x1e90ff },
+        { color: 0xff8c00, height: 0.05, title: 'Modern Web Design', spine: 0xffa500 }
       ];
 
       books.forEach((book, i) => {
+        // Main book body with premium material
         const bookGeometry = new THREE.BoxGeometry(0.5, book.height, 0.8);
-        const bookMaterial = new THREE.MeshLambertMaterial({ color: book.color });
+        const bookMaterial = new THREE.MeshStandardMaterial({ 
+          color: book.color,
+          roughness: 0.7,
+          metalness: 0.0,
+          emissive: new THREE.Color(book.color).multiplyScalar(0.05),
+          emissiveIntensity: 0.1
+        });
         const bookMesh = new THREE.Mesh(bookGeometry, bookMaterial);
         
+        // Add slight rotation for realistic stacking
+        const rotationOffset = (Math.random() - 0.5) * 0.15;
+        bookMesh.rotation.y = rotationOffset;
         bookMesh.position.y = i * book.height + book.height / 2;
         bookMesh.castShadow = true;
+        bookMesh.receiveShadow = true;
         group.add(bookMesh);
 
-        // Book spine text (simplified as a colored strip)
+        // Book spine with title area
         const spineGeometry = new THREE.BoxGeometry(0.02, book.height * 0.8, 0.6);
-        const spineMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+        const spineMaterial = new THREE.MeshStandardMaterial({ 
+          color: book.spine,
+          roughness: 0.4,
+          metalness: 0.1,
+          emissive: new THREE.Color(book.spine).multiplyScalar(0.02),
+          emissiveIntensity: 0.05
+        });
         const spine = new THREE.Mesh(spineGeometry, spineMaterial);
         spine.position.set(0.24, i * book.height + book.height / 2, 0);
+        spine.rotation.y = rotationOffset;
         group.add(spine);
+
+        // Embossed title on spine
+        const titleGeometry = new THREE.BoxGeometry(0.005, book.height * 0.6, 0.4);
+        const titleMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0xffd700,
+          roughness: 0.2,
+          metalness: 0.8,
+          emissive: 0x332200,
+          emissiveIntensity: 0.1
+        });
+        const title = new THREE.Mesh(titleGeometry, titleMaterial);
+        title.position.set(0.245, i * book.height + book.height / 2, 0);
+        title.rotation.y = rotationOffset;
+        group.add(title);
+
+        // Book pages with realistic edge texture
+        const pagesGeometry = new THREE.BoxGeometry(0.48, book.height - 0.01, 0.78);
+        const pagesMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0xfffef7,
+          roughness: 0.9,
+          metalness: 0.0
+        });
+        const pages = new THREE.Mesh(pagesGeometry, pagesMaterial);
+        pages.position.set(-0.01, i * book.height + book.height / 2, 0);
+        pages.rotation.y = rotationOffset;
+        group.add(pages);
+
+        // Corner bookmarks for some books
+        if (i % 2 === 0) {
+          const bookmarkGeometry = new THREE.BoxGeometry(0.08, 0.002, 0.02);
+          const bookmarkMaterial = new THREE.MeshStandardMaterial({ 
+            color: i === 0 ? 0xff6b35 : 0x9333ea,
+            roughness: 0.6,
+            metalness: 0.0
+          });
+          const bookmark = new THREE.Mesh(bookmarkGeometry, bookmarkMaterial);
+          bookmark.position.set(0.2, i * book.height + book.height + 0.01, 0.35);
+          bookmark.rotation.y = rotationOffset;
+          group.add(bookmark);
+        }
       });
 
       group.position.set(2, 0.12, 1.2);
@@ -629,32 +980,57 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       return group;
     };
 
-    // Create desk lamp with realistic lighting
+    // Create premium desk lamp with realistic lighting and materials
     const createDeskLamp = () => {
       const group = new THREE.Group();
       
-      // Lamp base
-      const baseGeometry = new THREE.CylinderGeometry(0.15, 0.2, 0.1, 12);
-      const baseMaterial = new THREE.MeshLambertMaterial({ color: 0x2c2c2c });
+      // Weighted lamp base with premium finish
+      const baseGeometry = new THREE.CylinderGeometry(0.15, 0.2, 0.1, 16);
+      const baseMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x2a2a2a,
+        roughness: 0.3,
+        metalness: 0.8,
+        emissive: 0x0a0a0a,
+        emissiveIntensity: 0.05
+      });
       const base = new THREE.Mesh(baseGeometry, baseMaterial);
       base.position.y = 0.05;
       base.castShadow = true;
       group.add(base);
 
-      // Lamp arm
-      const armGeometry = new THREE.CylinderGeometry(0.02, 0.02, 1.2, 8);
-      const armMaterial = new THREE.MeshLambertMaterial({ color: 0x2c2c2c });
+      // Adjustable lamp arm with realistic joints
+      const armGeometry = new THREE.CylinderGeometry(0.02, 0.02, 1.2, 12);
+      const armMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x3a3a3a,
+        roughness: 0.4,
+        metalness: 0.7
+      });
       const arm = new THREE.Mesh(armGeometry, armMaterial);
       arm.position.set(0.3, 0.8, 0);
       arm.rotation.z = Math.PI / 6;
       arm.castShadow = true;
       group.add(arm);
 
-      // Lamp shade
-      const shadeGeometry = new THREE.ConeGeometry(0.2, 0.3, 12, 1, true);
-      const shadeMaterial = new THREE.MeshLambertMaterial({ 
-        color: 0xffffff,
-        side: THREE.DoubleSide 
+      // Joint connector at the base
+      const jointGeometry = new THREE.SphereGeometry(0.035, 12, 8);
+      const jointMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x404040,
+        roughness: 0.2,
+        metalness: 0.9
+      });
+      const joint = new THREE.Mesh(jointGeometry, jointMaterial);
+      joint.position.set(0.15, 0.15, 0);
+      group.add(joint);
+
+      // Modern lamp shade with brushed metal finish
+      const shadeGeometry = new THREE.ConeGeometry(0.22, 0.35, 16, 1, true);
+      const shadeMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xf8f8f8,
+        side: THREE.DoubleSide,
+        roughness: 0.1,
+        metalness: 0.7,
+        emissive: 0x111111,
+        emissiveIntensity: 0.02
       });
       const shade = new THREE.Mesh(shadeGeometry, shadeMaterial);
       shade.position.set(0.5, 1.3, 0);
@@ -662,168 +1038,354 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       shade.castShadow = true;
       group.add(shade);
 
-      // Light bulb glow
-      const bulbGeometry = new THREE.SphereGeometry(0.05);
-      const bulbMaterial = new THREE.MeshLambertMaterial({ 
-        color: 0xffffaa,
-        emissive: 0xffff88,
-        emissiveIntensity: 0.5
+      // LED bulb with warm glow
+      const bulbGeometry = new THREE.SphereGeometry(0.05, 12, 8);
+      const bulbMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xfffacd,
+        emissive: 0xffaa44,
+        emissiveIntensity: 0.6,
+        transparent: true,
+        opacity: 0.8
       });
       const bulb = new THREE.Mesh(bulbGeometry, bulbMaterial);
       bulb.position.set(0.5, 1.2, 0);
       group.add(bulb);
 
+      // Power cord for realism
+      const cordGeometry = new THREE.CylinderGeometry(0.008, 0.008, 0.6, 8);
+      const cordMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x1a1a1a,
+        roughness: 0.8,
+        metalness: 0.0
+      });
+      const cord = new THREE.Mesh(cordGeometry, cordMaterial);
+      cord.position.set(-0.15, 0.05, -0.2);
+      cord.rotation.x = Math.PI / 3;
+      group.add(cord);
+
+      // Lamp switch/button
+      const switchGeometry = new THREE.CylinderGeometry(0.015, 0.015, 0.01, 8);
+      const switchMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x333333,
+        roughness: 0.3,
+        metalness: 0.6
+      });
+      const lampSwitch = new THREE.Mesh(switchGeometry, switchMaterial);
+      lampSwitch.position.set(0.1, 0.12, 0);
+      group.add(lampSwitch);
+
+      // Light ring around the base
+      const ringGeometry = new THREE.TorusGeometry(0.18, 0.005, 8, 24);
+      const ringMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x00aaff,
+        emissive: 0x004488,
+        emissiveIntensity: 0.3,
+        transparent: true,
+        opacity: 0.7
+      });
+      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+      ring.position.y = 0.02;
+      ring.rotation.x = Math.PI / 2;
+      group.add(ring);
+
       group.position.set(-1.5, 0.1, 0.8);
       return group;
     };
 
-    // Create computer case with realistic details
+    // Create premium computer case with RGB and realistic details
     const createComputerCase = () => {
       const group = new THREE.Group();
       
-      // Main case body
+      // Main case body with premium finish
       const caseGeometry = new THREE.BoxGeometry(0.8, 1.6, 1.2);
-      const caseMaterial = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
+      const caseMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x1a1a1a,
+        roughness: 0.3,
+        metalness: 0.7,
+        emissive: 0x0a0a0a,
+        emissiveIntensity: 0.05
+      });
       const computerCase = new THREE.Mesh(caseGeometry, caseMaterial);
       computerCase.castShadow = true;
+      computerCase.receiveShadow = true;
       group.add(computerCase);
 
-      // Tempered glass side panel
+      // Premium tempered glass side panel with realistic reflection
       const glassGeometry = new THREE.BoxGeometry(0.02, 1.4, 1);
-      const glassMaterial = new THREE.MeshLambertMaterial({ 
+      const glassMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x88ccff,
         transparent: true,
-        opacity: 0.3
+        opacity: 0.15,
+        roughness: 0.0,
+        metalness: 0.0
       });
       const glass = new THREE.Mesh(glassGeometry, glassMaterial);
       glass.position.set(-0.39, 0, 0);
       group.add(glass);
 
-      // Power LED with pulsing effect
-      const ledGeometry = new THREE.SphereGeometry(0.03);
-      const ledMaterial = new THREE.MeshLambertMaterial({ 
-        color: 0x0066ff,
-        emissive: 0x002266,
-        emissiveIntensity: 0.8
+      // Power LED with realistic glow
+      const ledGeometry = new THREE.SphereGeometry(0.03, 12, 8);
+      const ledMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x0088ff,
+        emissive: 0x0066cc,
+        emissiveIntensity: 0.8,
+        transparent: true,
+        opacity: 0.9
       });
       const led = new THREE.Mesh(ledGeometry, ledMaterial);
       led.position.set(0.35, 0.6, 0.61);
       group.add(led);
 
-      // RGB strips inside case (visible through glass)
+      // RGB LED strips inside case (premium RGB lighting)
+      const rgbColors = [0xff0080, 0x00ff80, 0x8000ff, 0xff8000];
       for (let i = 0; i < 4; i++) {
         const stripGeometry = new THREE.BoxGeometry(0.6, 0.02, 0.02);
-        const stripMaterial = new THREE.MeshLambertMaterial({ 
-          color: 0xff0080,
-          emissive: 0x660033,
-          emissiveIntensity: 0.6
+        const stripMaterial = new THREE.MeshStandardMaterial({ 
+          color: rgbColors[i],
+          emissive: rgbColors[i],
+          emissiveIntensity: 0.6,
+          transparent: true,
+          opacity: 0.8
         });
         const strip = new THREE.Mesh(stripGeometry, stripMaterial);
         strip.position.set(-0.3, 0.5 - i * 0.3, 0.4);
         group.add(strip);
       }
 
-      // Ventilation grille with realistic spacing
-      for (let i = 0; i < 10; i++) {
-        const grillGeometry = new THREE.BoxGeometry(0.6, 0.02, 0.01);
-        const grillMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+      // Realistic ventilation grille with hexagonal pattern
+      for (let i = 0; i < 12; i++) {
+        const grillGeometry = new THREE.BoxGeometry(0.6, 0.015, 0.01);
+        const grillMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x333333,
+          roughness: 0.6,
+          metalness: 0.4
+        });
         const grill = new THREE.Mesh(grillGeometry, grillMaterial);
-        grill.position.set(0, 0.4 - i * 0.08, 0.61);
+        grill.position.set(0, 0.4 - i * 0.07, 0.61);
         group.add(grill);
       }
 
-      // Front I/O panel
+      // Premium front I/O panel with brushed metal
       const ioGeometry = new THREE.BoxGeometry(0.3, 0.1, 0.02);
-      const ioMaterial = new THREE.MeshLambertMaterial({ color: 0x2a2a2a });
+      const ioMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x404040,
+        roughness: 0.2,
+        metalness: 0.8
+      });
       const ioPanel = new THREE.Mesh(ioGeometry, ioMaterial);
       ioPanel.position.set(0.2, 0.7, 0.61);
       group.add(ioPanel);
 
-      // USB ports
+      // USB ports with realistic design
       for (let i = 0; i < 3; i++) {
-        const usbGeometry = new THREE.BoxGeometry(0.04, 0.02, 0.01);
-        const usbMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 });
+        const usbGeometry = new THREE.BoxGeometry(0.04, 0.02, 0.015);
+        const usbMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x000000,
+          roughness: 0.9,
+          metalness: 0.1
+        });
         const usb = new THREE.Mesh(usbGeometry, usbMaterial);
-        usb.position.set(0.1 + i * 0.05, 0.7, 0.62);
+        usb.position.set(0.1 + i * 0.05, 0.7, 0.625);
         group.add(usb);
       }
+
+      // Audio jacks
+      for (let j = 0; j < 2; j++) {
+        const jackGeometry = new THREE.CylinderGeometry(0.008, 0.008, 0.015, 8);
+        const jackMaterial = new THREE.MeshStandardMaterial({ 
+          color: j === 0 ? 0x00aa00 : 0xff6600,
+          roughness: 0.4,
+          metalness: 0.6
+        });
+        const jack = new THREE.Mesh(jackGeometry, jackMaterial);
+        jack.position.set(0.25 + j * 0.03, 0.65, 0.625);
+        jack.rotation.x = Math.PI / 2;
+        group.add(jack);
+      }
+
+      // Case feet with rubber material
+      for (let k = 0; k < 4; k++) {
+        const footGeometry = new THREE.CylinderGeometry(0.02, 0.025, 0.03, 8);
+        const footMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x2a2a2a,
+          roughness: 0.9,
+          metalness: 0.0
+        });
+        const foot = new THREE.Mesh(footGeometry, footMaterial);
+        const footX = k % 2 === 0 ? -0.35 : 0.35;
+        const footZ = k < 2 ? -0.55 : 0.55;
+        foot.position.set(footX, -0.815, footZ);
+        group.add(foot);
+      }
+
+      // CPU cooler fan visible through glass
+      const fanGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.03, 8);
+      const fanMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x444444,
+        roughness: 0.4,
+        metalness: 0.6
+      });
+      const fan = new THREE.Mesh(fanGeometry, fanMaterial);
+      fan.position.set(-0.3, 0.2, 0);
+      fan.rotation.x = Math.PI / 2;
+      group.add(fan);
 
       group.position.set(3.5, 0.9, 0);
       return group;
     };
 
-    // Create floating particles for ambient effect
+    // Create premium floating particles for ambient atmosphere
     const createParticles = () => {
-      const particleCount = 50;
+      const particleCount = 100;
       const particles = new THREE.BufferGeometry();
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
+      const sizes = new Float32Array(particleCount);
 
       for (let i = 0; i < particleCount; i++) {
-        // Random positions around the scene
-        positions[i * 3] = (Math.random() - 0.5) * 20;
-        positions[i * 3 + 1] = Math.random() * 8;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+        // Strategic positioning around the scene for better ambiance
+        positions[i * 3] = (Math.random() - 0.5) * 25;     // X
+        positions[i * 3 + 1] = Math.random() * 10 + 1;     // Y (above ground)
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 25; // Z
 
-        // Random colors (mostly blue tones)
-        colors[i * 3] = 0.2 + Math.random() * 0.3;     // R
-        colors[i * 3 + 1] = 0.4 + Math.random() * 0.4; // G  
-        colors[i * 3 + 2] = 0.8 + Math.random() * 0.2; // B
+        // Varied warm particle colors for cozy atmosphere
+        const colorVariation = Math.random();
+        if (colorVariation < 0.3) {
+          // Warm blue tones
+          colors[i * 3] = 0.2 + Math.random() * 0.3;     // R
+          colors[i * 3 + 1] = 0.4 + Math.random() * 0.4; // G  
+          colors[i * 3 + 2] = 0.8 + Math.random() * 0.2; // B
+        } else if (colorVariation < 0.6) {
+          // Golden warm tones
+          colors[i * 3] = 0.8 + Math.random() * 0.2;     // R
+          colors[i * 3 + 1] = 0.6 + Math.random() * 0.3; // G  
+          colors[i * 3 + 2] = 0.2 + Math.random() * 0.2; // B
+        } else {
+          // Soft purple accents
+          colors[i * 3] = 0.6 + Math.random() * 0.3;     // R
+          colors[i * 3 + 1] = 0.3 + Math.random() * 0.3; // G  
+          colors[i * 3 + 2] = 0.8 + Math.random() * 0.2; // B
+        }
+
+        // Varied particle sizes for depth
+        sizes[i] = 0.01 + Math.random() * 0.03;
       }
 
       particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
       const particleMaterial = new THREE.PointsMaterial({
-        size: 0.02,
+        size: 0.025,
         vertexColors: true,
         transparent: true,
-        opacity: 0.6,
-        blending: THREE.AdditiveBlending
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true,
+        alphaTest: 0.001
       });
 
       const particleSystem = new THREE.Points(particles, particleMaterial);
       return particleSystem;
     };
 
-    // Enhanced floor with reflection-like effect
+    // Enhanced premium floor with realistic reflection and texture
     const createFloor = () => {
-      const floorGeometry = new THREE.PlaneGeometry(25, 25, 32, 32);
+      const floorGeometry = new THREE.PlaneGeometry(25, 25, 64, 64);
       
-      // Create a subtle pattern for the floor
-      const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 512;
-      const ctx = canvas.getContext('2d')!;
-      
-      // Dark base
-      ctx.fillStyle = '#1a1a2e';
-      ctx.fillRect(0, 0, 512, 512);
-      
-      // Add subtle grid pattern
-      ctx.strokeStyle = '#2a2a3e';
-      ctx.lineWidth = 1;
-      for (let i = 0; i < 512; i += 32) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, 512);
-        ctx.stroke();
+      // Create sophisticated floor pattern with subtle variations
+      const createPremiumFloorTexture = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1024;
+        canvas.height = 1024;
+        const ctx = canvas.getContext('2d')!;
         
+        // Rich dark base with subtle gradient
+        const gradient = ctx.createLinearGradient(0, 0, 1024, 1024);
+        gradient.addColorStop(0, '#1a1a2e');
+        gradient.addColorStop(0.5, '#16213e');
+        gradient.addColorStop(1, '#1a1a2e');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1024, 1024);
+        
+        // Sophisticated hexagonal pattern
+        const hexSize = 32;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+        ctx.lineWidth = 1;
+        
+        for (let y = 0; y < 1024; y += hexSize * 1.5) {
+          for (let x = 0; x < 1024; x += hexSize * Math.sqrt(3)) {
+            const offsetX = (y / (hexSize * 1.5)) % 2 === 1 ? hexSize * Math.sqrt(3) / 2 : 0;
+            drawHexagon(ctx, x + offsetX, y, hexSize / 2);
+          }
+        }
+        
+        // Add subtle marble-like veining
+        ctx.strokeStyle = 'rgba(100, 120, 150, 0.08)';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 15; i++) {
+          ctx.beginPath();
+          const startX = Math.random() * 1024;
+          const startY = Math.random() * 1024;
+          ctx.moveTo(startX, startY);
+          
+          // Create curved veining
+          for (let j = 0; j < 5; j++) {
+            const controlX = startX + (Math.random() - 0.5) * 200;
+            const controlY = startY + (Math.random() - 0.5) * 200;
+            const endX = startX + (Math.random() - 0.5) * 400;
+            const endY = startY + (Math.random() - 0.5) * 400;
+            ctx.quadraticCurveTo(controlX, controlY, endX, endY);
+          }
+          ctx.stroke();
+        }
+        
+        // Subtle ambient dots for texture variation
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
+        for (let k = 0; k < 200; k++) {
+          const dotX = Math.random() * 1024;
+          const dotY = Math.random() * 1024;
+          const radius = Math.random() * 3 + 1;
+          ctx.beginPath();
+          ctx.arc(dotX, dotY, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        
+        return new THREE.CanvasTexture(canvas);
+      };
+
+      // Helper function to draw hexagon
+      const drawHexagon = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number) => {
         ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(512, i);
+        for (let i = 0; i < 6; i++) {
+          const angle = (i * Math.PI) / 3;
+          const hexX = x + size * Math.cos(angle);
+          const hexY = y + size * Math.sin(angle);
+          if (i === 0) {
+            ctx.moveTo(hexX, hexY);
+          } else {
+            ctx.lineTo(hexX, hexY);
+          }
+        }
+        ctx.closePath();
         ctx.stroke();
-      }
-      
-      const floorTexture = new THREE.CanvasTexture(canvas);
+      };
+
+      const floorTexture = createPremiumFloorTexture();
       floorTexture.wrapS = THREE.RepeatWrapping;
       floorTexture.wrapT = THREE.RepeatWrapping;
-      floorTexture.repeat.set(4, 4);
-      
-      const floorMaterial = new THREE.MeshLambertMaterial({ 
+      floorTexture.repeat.set(6, 6);
+
+      // Premium floor material with enhanced properties
+      const floorMaterial = new THREE.MeshStandardMaterial({ 
         map: floorTexture,
+        color: 0x2a2a4a,
+        roughness: 0.2,
+        metalness: 0.3,
+        emissive: 0x0a0a1a,
+        emissiveIntensity: 0.05,
         transparent: true,
-        opacity: 0.8
+        opacity: 0.95
       });
       
       const floor = new THREE.Mesh(floorGeometry, floorMaterial);
