@@ -84,7 +84,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
 
     // RGB keyboard light
     const keyboardLight = new THREE.PointLight(0xff0080, 1.2, 6);
-    keyboardLight.position.set(0, 1, -1);
+    keyboardLight.position.set(0, 1, 2.2);
     scene.add(keyboardLight);
 
     // Create wooden desk
@@ -373,7 +373,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       spacebar.castShadow = true;
       group.add(spacebar);
 
-      group.position.set(0, 0.21, -1.2);
+      group.position.set(0, 0.21, 2.2);
       return group;
     };
 
@@ -383,7 +383,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       mouseGeometry.scale(1, 1, 1);
       const mouseMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
       const mouse = new THREE.Mesh(mouseGeometry, mouseMaterial);
-      mouse.position.set(1.5, 0.125, -0.5);
+      mouse.position.set(1.5, 0.125, 2.8);
       mouse.castShadow = true;
       
       // Mouse wheel
@@ -391,7 +391,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       const wheelMaterial = new THREE.MeshLambertMaterial({ color: 0x555555 });
       const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
       wheel.rotation.x = Math.PI / 2;
-      wheel.position.set(1.5, 0.16, -0.4);
+      wheel.position.set(1.5, 0.16, 2.9);
       wheel.castShadow = true;
       
       const group = new THREE.Group();
@@ -466,7 +466,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       handle.position.set(0.15, 0, 0);
       group.add(handle);
 
-      group.position.set(-1.5, 0.225, -1.2);
+      group.position.set(-1.5, 0.225, 2.5);
       return group;
     };
 
