@@ -225,32 +225,32 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
       base.castShadow = true;
       group.add(base);
 
-      // Monitor stand - 调整高度避免伸进屏幕，完全位于屏幕后面
-      const standGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.95, 12); // 进一步降低高度
+      // Monitor stand - 调整高度和强度以支撑更大显示器
+      const standGeometry = new THREE.CylinderGeometry(0.08, 0.08, 1.05, 12); // 稍微增高以支撑更大屏幕
       const standMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x333333,
         roughness: 0.2,
         metalness: 0.9
       });
       const stand = new THREE.Mesh(standGeometry, standMaterial);
-      stand.position.set(0, 0.775, -0.15); // 进一步向后移动，确保完全在屏幕后面
+      stand.position.set(0, 0.825, -0.15); // 稍微提高以适应更大屏幕
       stand.castShadow = true;
       group.add(stand);
 
-      // Monitor arm - 连接支架和屏幕的连接臂，完全位于屏幕后面
-      const armGeometry = new THREE.BoxGeometry(0.10, 0.03, 0.25); // 缩小尺寸
+      // Monitor arm - 连接支架和屏幕的连接臂，增强以支撑更大屏幕
+      const armGeometry = new THREE.BoxGeometry(0.12, 0.04, 0.28); // 稍微增大以支撑更大屏幕
       const armMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x333333,
         roughness: 0.2,
         metalness: 0.9
       });
       const arm = new THREE.Mesh(armGeometry, armMaterial);
-      arm.position.set(0, 1.65, -0.15); // 降低高度，大幅向后移动，完全在屏幕后面
+      arm.position.set(0, 1.75, -0.15); // 提高位置适应更大屏幕
       arm.castShadow = true;
       group.add(arm);
 
-      // Monitor bezel (outer frame) - 更窄更薄，金属光泽
-      const bezelGeometry = new THREE.BoxGeometry(2.44, 1.64, 0.06); // 边框宽度缩小，厚度更薄
+      // Monitor bezel (outer frame) - 更窄更薄，金属光泽，更大尺寸
+      const bezelGeometry = new THREE.BoxGeometry(3.25, 2.19, 0.06); // 增大约33%
       const bezelMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x23272a,
         roughness: 0.18, // 更光滑
@@ -258,12 +258,12 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
         envMapIntensity: 1.2
       });
       const bezel = new THREE.Mesh(bezelGeometry, bezelMaterial);
-      bezel.position.set(0, 1.7, 0.01); // 更贴近屏幕
+      bezel.position.set(0, 1.8, 0.01); // 稍微调高位置适应更大屏幕
       bezel.castShadow = true;
       group.add(bezel);
 
-      // Monitor screen (black when off) - 更薄
-      const screenGeometry = new THREE.BoxGeometry(2.36, 1.56, 0.018); // 屏幕厚度更薄
+      // Monitor screen (black when off) - 更薄，更大尺寸
+      const screenGeometry = new THREE.BoxGeometry(3.15, 2.08, 0.018); // 增大约33%
       const screenMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x000000,
         emissive: 0x001122,
@@ -272,12 +272,12 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
         metalness: 0.85
       });
       const screen = new THREE.Mesh(screenGeometry, screenMaterial);
-      screen.position.set(0, 1.7, 0.045); // 贴近bezel
+      screen.position.set(0, 1.8, 0.045); // 贴近bezel，调高位置
       screen.castShadow = true;
       group.add(screen);
 
-      // Screen content (code editor)
-      const codeGeometry = new THREE.PlaneGeometry(2.28, 1.48);
+      // Screen content (code editor) - 更大尺寸
+      const codeGeometry = new THREE.PlaneGeometry(3.04, 1.97); // 增大约33%
       const codeTexture = createCodeTexture();
       const codeMaterial = new THREE.MeshStandardMaterial({ 
         map: codeTexture,
@@ -288,10 +288,10 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
         metalness: 0.0
       });
       const codeScreen = new THREE.Mesh(codeGeometry, codeMaterial);
-      codeScreen.position.set(0, 1.7, 0.055); // 贴近屏幕表面
+      codeScreen.position.set(0, 1.8, 0.055); // 贴近屏幕表面，调高位置适应更大屏幕
       group.add(codeScreen);
 
-      // Monitor brand logo
+      // Monitor brand logo - 调整位置适应更大屏幕
       const logoGeometry = new THREE.PlaneGeometry(0.3, 0.1);
       const logoMaterial = new THREE.MeshStandardMaterial({ 
         color: 0xffffff,
@@ -299,7 +299,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
         emissiveIntensity: 0.2
       });
       const logo = new THREE.Mesh(logoGeometry, logoMaterial);
-      logo.position.set(0, 1.0, 0.11);
+      logo.position.set(0, 1.05, 0.11); // 稍微调高位置适应更大屏幕
       group.add(logo);
 
       group.position.set(0, 0.15, 1.2);
