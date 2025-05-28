@@ -188,7 +188,7 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
     const createMonitor = () => {
       const group = new THREE.Group();
       
-      // Monitor base - 调整位置与支架对齐
+      // Monitor base - 调整位置与支架对齐，完全在屏幕后面
       const baseGeometry = new THREE.CylinderGeometry(0.5, 0.6, 0.15, 16);
       const baseMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x2a2a2a,
@@ -196,31 +196,31 @@ const LearningScene3D: React.FC<LearningScene3DProps> = ({ className }) => {
         metalness: 0.8
       });
       const base = new THREE.Mesh(baseGeometry, baseMaterial);
-      base.position.set(0, 0.225, -0.1); // Z位置与支架对齐
+      base.position.set(0, 0.225, -0.15); // Z位置与支架对齐，更向后
       base.castShadow = true;
       group.add(base);
 
-      // Monitor stand - 调整高度避免伸进屏幕
-      const standGeometry = new THREE.CylinderGeometry(0.08, 0.08, 1.0, 12); // 高度从1.2降到1.0
+      // Monitor stand - 调整高度避免伸进屏幕，完全位于屏幕后面
+      const standGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.95, 12); // 进一步降低高度
       const standMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x333333,
         roughness: 0.2,
         metalness: 0.9
       });
       const stand = new THREE.Mesh(standGeometry, standMaterial);
-      stand.position.set(0, 0.8, -0.1); // Y位置从0.9降到0.8，Z位置向后偏移-0.1避免与屏幕重叠
+      stand.position.set(0, 0.775, -0.15); // 进一步向后移动，确保完全在屏幕后面
       stand.castShadow = true;
       group.add(stand);
 
-      // Monitor arm - 连接支架和屏幕的连接臂
-      const armGeometry = new THREE.BoxGeometry(0.12, 0.04, 0.3); 
+      // Monitor arm - 连接支架和屏幕的连接臂，完全位于屏幕后面
+      const armGeometry = new THREE.BoxGeometry(0.10, 0.03, 0.25); // 缩小尺寸
       const armMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x333333,
         roughness: 0.2,
         metalness: 0.9
       });
       const arm = new THREE.Mesh(armGeometry, armMaterial);
-      arm.position.set(0, 1.68, -0.08); // 连接支架顶部和屏幕背面
+      arm.position.set(0, 1.65, -0.15); // 降低高度，大幅向后移动，完全在屏幕后面
       arm.castShadow = true;
       group.add(arm);
 
